@@ -235,9 +235,9 @@ class AdaptationModel(Model):
         """
         # Define paths to flood maps
         flood_map_paths = {
-            'harvey': os.getcwd()+'\\input_data\\floodmaps\\Harvey_depth_meters.tif',
-            '100yr': os.getcwd()+'\\input_data\\floodmaps\\100yr_storm_depth_meters.tif',
-            '500yr': os.getcwd()+'\\input_data\\floodmaps\\500yr_storm_depth_meters.tif'  # Example path for 500yr flood map
+            'harvey': r"C:\Users\Ineke\FloodModel.3-2-2024\input_data\floodmaps\Harvey_depth_meters.tif",
+            '100yr': r"C:\Users\Ineke\FloodModel.3-2-2024\input_data\floodmaps\Harvey_depth_meters.tif",
+            '500yr': r"C:\Users\Ineke\FloodModel.3-2-2024\input_data\floodmaps\Harvey_depth_meters.tif"  # Example path for 500yr flood map
         }
 
         # Throw a ValueError if the flood map choice is not in the dictionary
@@ -269,8 +269,8 @@ class AdaptationModel(Model):
         # Collect agent locations and statuses
         for agent in self.schedule.agents:
             color = 'blue' if agent.is_adapted else 'red'
-            ax.scatter(agent.location.x, agent.location.y, color=color, s=10, label=color.capitalize() if not ax.collections else "")
-            ax.annotate(str(agent.unique_id), (agent.location.x, agent.location.y), textcoords="offset points", xytext=(0,1), ha='center', fontsize=9)
+            ax.scatter(agent.location.x, agent.location.y, color=color, s=100, label=color.capitalize() if not ax.collections else "")
+            ax.annotate(str(agent.unique_id), (agent.location.x, agent.location.y), textcoords="offset points", xytext=(0,1), ha='center', fontsize=15)
         # Create legend with unique entries
         handles, labels = ax.get_legend_handles_labels()
         by_label = dict(zip(labels, handles))

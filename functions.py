@@ -13,6 +13,7 @@ from shapely import prepare
 import geopandas as gpd
 import os
 
+
 def set_initial_values(input_data, parameter, seed):
     """
     Function to set the values based on the distribution shown in the input data for each parameter.
@@ -29,18 +30,20 @@ def set_initial_values(input_data, parameter, seed):
     parameter_set: the value that is set for a certain agent for the specified parameter 
     """
     parameter_set = 0
-    parameter_data = input_data.loc[(input_data.parameter == parameter)] # get the distribution of values for the specified parameter
+    parameter_data = input_data.loc[
+        (input_data.parameter == parameter)]  # get the distribution of values for the specified parameter
     parameter_data = parameter_data.reset_index()
 
     #random.seed(40)
-    random_parameter = random.randint(0,100) 
+    random_parameter = random.randint(0, 100)
     for i in range(len(parameter_data)):
         if i == 0:
             if random_parameter < parameter_data['value_for_input'][i]:
                 parameter_set = parameter_data['value'][i]
                 break
         else:
-            if (random_parameter >= parameter_data['value_for_input'][i-1]) and (random_parameter <= parameter_data['value_for_input'][i]):
+            if (random_parameter >= parameter_data['value_for_input'][i - 1]) and (
+                    random_parameter <= parameter_data['value_for_input'][i]):
                 parameter_set = parameter_data['value'][i]
                 break
             else:
@@ -68,11 +71,8 @@ def get_flood_map_data(flood_map):
     return band, bound_l, bound_r, bound_t, bound_b
 
 
-
-
-shapefile_path = os.getcwd()+'\\input_data\\model_domain\\houston_model\\houston_model.shp'
-floodplain_path = os.getcwd()+'\\input_data\\floodplain\\floodplain_area.shp'
-
+shapefile_path = os.getcwd() + '\\input_data\\model_domain\\houston_model\\houston_model.shp'
+floodplain_path = os.getcwd() + '\\input_data\\floodplain\\floodplain_area.shp'
 
 # Model area setup
 map_domain_gdf = gpd.GeoDataFrame.from_file(shapefile_path)
@@ -88,6 +88,7 @@ floodplain_gdf = floodplain_gdf.to_crs(epsg=26915)
 floodplain_geoseries = floodplain_gdf['geometry']
 floodplain_multipolygon = floodplain_geoseries[0]  # The geoseries contains only one multipolygon
 prepare(floodplain_multipolygon)
+
 
 def generate_random_location_within_map_domain():
     """
@@ -106,6 +107,7 @@ def generate_random_location_within_map_domain():
         if contains_xy(map_domain_polygon, x, y):
             return x, y
 
+
 def get_flood_depth(corresponding_map, location, band):
     """ 
     To get the flood depth of a specific location within the model domain.
@@ -122,9 +124,9 @@ def get_flood_depth(corresponding_map, location, band):
     depth: flood depth at the given location
     """
     row, col = corresponding_map.index(location.x, location.y)
-    depth = band[row -1, col -1]
+    depth = band[row - 1, col - 1]
     return depth
-    
+
 
 def get_position_flood(bound_l, bound_r, bound_t, bound_b, img):
     """ 
@@ -148,6 +150,7 @@ def get_position_flood(bound_l, bound_r, bound_t, bound_b, img):
     row, col = img.index(x, y)
     return x, y, row, col
 
+
 def calculate_basic_flood_damage(flood_depth):
     """
     To get flood damage based on flood depth of household
@@ -170,4 +173,3 @@ def calculate_basic_flood_damage(flood_depth):
         # see flood_damage.xlsx for function generation
         flood_damage = 0.1746 * math.log(flood_depth) + 0.6483
     return flood_damage
-
